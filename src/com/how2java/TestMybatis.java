@@ -10,7 +10,8 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
 import com.how2java.pojo.Category;
-import com.how2java.pojo.Product;
+import com.how2java.pojo.Order;
+import com.how2java.pojo.OrderItem;
 
 /** 
  * @author  xiaomingHe
@@ -39,6 +40,7 @@ public class TestMybatis {
         
         //listAll(session);
         
+        //更多查询
         /*List<Category> cs = session.selectList("listCategoryByName","cat");
         for (Category c : cs) {
             System.out.println(c.getName());
@@ -53,16 +55,17 @@ public class TestMybatis {
         }*/
         
         //一对多关系
-        List<Category> cs = session.selectList("listCategoryJoinProduct");
+      /*  List<Category> cs = session.selectList("listCategoryJoinProduct");
         for (Category c : cs) {
             System.out.println(c);
             List<Product> ps = c.getProducts();
             for (Product p : ps) {
                 System.out.println("\t" + p);
             }
-        }
+        }*/
         
-        
+        //多对多关系
+        listOrder(session);
         
         
         
@@ -75,7 +78,20 @@ public class TestMybatis {
         }*/
     }
     
-    private static void listAll(SqlSession session) {
+    private static void listOrder(SqlSession session) {
+    	List<Order> os = session.selectList("listOrder");
+		for (Order o : os) {
+			System.out.println(o.getCode());
+			List<OrderItem> ois = o.getOrderItems();
+			for (OrderItem oi : ois) {
+				System.out.format("\t%s\t%f\t%d%n", oi.getProduct().getName(),oi.getProduct().getPrice(),oi.getNumber());
+			}
+			
+		}
+    	
+	}
+
+	private static void listAll(SqlSession session) {
         List<Category> cs = session.selectList("listCategory");
         for (Category c : cs) {
             System.out.println(c.getName());
